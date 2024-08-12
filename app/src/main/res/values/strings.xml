@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">YouVerifyAssessment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start_your_shopping_journey_now">Welcome to YouVerify e-Commerce</string>
+    <string name="log_in">Log In</string>
+    <string name="welcome_text">Your shopping experience starts here. \nLogin to experience a whole new world of shopping</string>
+    <string name="sample_product">Sample Product</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="sign_in_to_your_account">Sign in to your account.</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or_continue_with">Or Continue With</string>
+    <string name="sign_in_with_google">Sign in / Sign up With Google</string>
+    <string name="sign_up_to_order">Sign up to be able to order your favorite products easily and quickly.</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="request_not_yet_completed">Request not completed yet</string>
+    <string name="logged_in_successfully">Logged in successfully</string>
+    <string name="loader_image">Loading</string>
+    <string name="no_connection">No connection available</string>
+    <string name="login_failed">Logging in failed, Kindly try again.</string>
+    <string name="failed_try_again">Failed, kindly try again</string>
+    <string name="youverify">YouVerify</string>
+    <string name="search_products">Search products...</string>
+    <string name="drag_up">drag up</string>
+    <string name="shopping_bag_icon">shopping bag icon</string>
+    <string name="size_7_60_fl_oz_225ml">Size 7.60 fl oz / 225ml</string>
+    <string name="required">Required</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="password_too_short">Password too short</string>
+</resources>
