@@ -1,7 +1,7 @@
 package com.example.youverifyassessment.data.remote.dtos
 
 data class ProductsResponseDtoItem(
-    val category: Category,
+    val category: CategoryDto,
     val creationAt: String,
     val description: String,
     val id: Int,

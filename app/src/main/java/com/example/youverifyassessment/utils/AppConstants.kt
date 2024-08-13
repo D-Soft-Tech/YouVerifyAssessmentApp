@@ -17,10 +17,13 @@ object AppConstants {
     // Database
     const val MOVIE_DETAILS_TABLE_NAME = "movie_details"
     const val MOVIE_TABLE_NAME = "movie"
-    const val DB_NAME = "youVerifyAssessmentDb"
+    const val DB_NAME = "YouVerifyAssessmentDb"
     const val DB_VERSION = 1
     const val PAGE_SIZE = 20
     const val PREFS_NAME = "YouVerifyPrefs"
+    const val PRODUCT_TABLE_NAME = "products"
+    const val PRODUCT_IMAGES_SEPARATOR = "<=====>"
+    const val SHOPPING_CART_TABLE_NAME = "shoppingCart"
 
     const val AUTH_INTERCEPTOR_DI_NAME = "AUTH_INTERCEPTOR_DI_NAME"
     const val LOGGING_INTERCEPTOR_DI_NAME = "LOGGING_INTERCEPTOR_DI_NAME"

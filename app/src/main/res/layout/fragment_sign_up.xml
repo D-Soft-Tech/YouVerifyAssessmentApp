@@ -5,7 +5,7 @@
     tools:context=".presentation.fragments.SignUpFragment">
 
     <data>
-
+        <import type="android.text.TextUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/new_password"
+                android:id="@+id/email_tiet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
@@ -79,7 +79,7 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/confirm_password_tet"
+                android:id="@+id/password_tiet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
@@ -101,7 +101,7 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/confirm_password"
+                android:id="@+id/confirm_password_tiet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
@@ -114,8 +114,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_30dp"
-            android:background="@drawable/btn_bg"
+            android:background="@drawable/toggle_btn_bg"
             android:elevation="@dimen/dimen_20dp"
+            android:enabled="@{!TextUtils.isEmpty(emailTiet.text.toString()) &amp;&amp; (!TextUtils.isEmpty(passwordTiet.text.toString()) &amp;&amp; passwordTiet.text.toString().length >= 4) &amp;&amp; (TextUtils.equals(passwordTiet.text.toString(), confirmPasswordTiet.text.toString()))}"
             android:fontFamily="@font/roboto_medium"
             android:text="@string/sign_up"
             android:textAllCaps="false"

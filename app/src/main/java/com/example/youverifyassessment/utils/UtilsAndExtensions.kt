@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.TextUtils
 import android.util.Patterns
+import android.view.WindowManager
 import android.widget.Toast
 import com.example.youverifyassessment.R
 
@@ -15,6 +16,7 @@ object UtilsAndExtensions {
         setContentView(R.layout.fragment_loading_dialog)
         window?.apply {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
         setCancelable(false)
         create()

@@ -1,6 +1,6 @@
 package com.example.youverifyassessment.data.remote.dtos
 
-data class Category(
+data class CategoryDto(
     val creationAt: String,
     val id: Int,
     val image: String,

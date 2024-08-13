@@ -6,16 +6,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.youverifyassessment.R
-import com.example.youverifyassessment.databinding.FragmentLoginBinding
 import com.example.youverifyassessment.databinding.FragmentSignUpBinding
 import com.example.youverifyassessment.domain.DeviceUtilsContract
-import com.example.youverifyassessment.domain.DeviceUtilsUseCase
 import com.example.youverifyassessment.presentation.viewModels.AppViewModel
+import com.example.youverifyassessment.utils.ModelMapper.toDomain
 import com.example.youverifyassessment.utils.UtilsAndExtensions.getLoadingAlertDialog
 import com.example.youverifyassessment.utils.UtilsAndExtensions.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -30,8 +31,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
-    private val REQUEST_CODE = 779
-
     @Inject
     lateinit var googleSignInOptions: GoogleSignInOptions
     @Inject
@@ -42,7 +41,8 @@ class SignUpFragment : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var email: TextInputEditText
     private lateinit var password: TextInputEditText
-    private lateinit var email: TextInputEditText
+    private lateinit var signUpWithFireBaseAuthButton: Button
+    private lateinit var signUpWithGoogleButton: Button
 
     private val appViewModel: AppViewModel by activityViewModels()
     private var loaderAlertDialog: Dialog? = null
@@ -55,11 +55,10 @@ class SignUpFragment : Fragment() {
                         val task = GoogleSignIn.getSignedInAccountFromIntent(it)
                         if (deviceUtilsUseCase.isConnectionAvailable()) {
                             loaderAlertDialog?.show()
-                            if (task.isComplete) {
+                            if (task.isSuccessful) {
                                 loaderAlertDialog?.dismiss()
                                 val loggedInUser = task.result
-                                appViewModel.saveUser(loggedInUser)
-                                signInWithFireBase(loggedInUser)
+                                signInWithGoogleThenFireBase(loggedInUser)
                             } else {
                                 requireContext().showToast(getString(R.string.request_not_yet_completed))
                             }
@@ -70,6 +69,8 @@ class SignUpFragment : Fragment() {
                         e.localizedMessage?.let { it1 -> requireContext().showToast(it1) }
                     }
                 }
+            } else {
+                requireContext().showToast(getString(R.string.failed_try_again))
             }
         }
 
@@ -83,15 +84,32 @@ class SignUpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
         loaderAlertDialog = requireContext().getLoadingAlertDialog()
         googleSignInClient = GoogleSignIn.getClient(requireContext(), googleSignInOptions)
+
+        // Sign up with google
+        signUpWithGoogleButton.setOnClickListener {
+            googleSignInRequestLauncher.launch(googleSignInClient.signInIntent)
+        }
+
+        // Sign up with firebase
+        signUpWithFireBaseAuthButton.setOnClickListener {
+            signUpWithFireBase(email.text.toString(), password.text.toString())
+        }
     }
 
-    private fun signInWithFireBase(account: GoogleSignInAccount) {
+    private fun signInWithGoogleThenFireBase(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         fireBaseInstance.signInWithCredential(credential).addOnSuccessListener {
             requireContext().showToast(getString(R.string.logged_in_successfully))
-            // Navigate to main app
+            // save user session
+            it?.user?.let { user ->
+                appViewModel.saveUser(user.toDomain())
+            }
+            // Navigate to product fragment
+            val action = SignUpFragmentDirections.actionSignUpFragmentToProductsFragment()
+            findNavController().navigate(action)
         }.addOnFailureListener {
             it.localizedMessage?.let { it1 -> requireContext().showToast(it1) }
         }
@@ -101,7 +119,13 @@ class SignUpFragment : Fragment() {
         fireBaseInstance.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 requireContext().showToast(getString(R.string.logged_in_successfully))
+                // save user session
+                it.result?.user?.let { user ->
+                    appViewModel.saveUser(user.toDomain())
+                }
                 // Navigate to main app
+                val action = SignUpFragmentDirections.actionSignUpFragmentToProductsFragment()
+                findNavController().navigate(action)
             } else {
                 requireContext().showToast(getString(R.string.login_failed))
             }
@@ -109,6 +133,16 @@ class SignUpFragment : Fragment() {
             requireContext().showToast(getString(R.string.failed_try_again))
         }
     }
+
+    private fun initViews() {
+        with(binding) {
+            this@SignUpFragment.email = emailTiet
+            this@SignUpFragment.password = passwordTiet
+            signUpWithFireBaseAuthButton = signUpBtn
+            signUpWithGoogleButton = signInWithGoogle
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

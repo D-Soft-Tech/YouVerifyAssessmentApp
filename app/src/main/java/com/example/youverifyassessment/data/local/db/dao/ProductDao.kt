@@ -1,0 +1,20 @@
+package com.example.youverifyassessment.data.local.db.dao
+
+import androidx.paging.PagingSource
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Upsert
+import com.example.youverifyassessment.data.local.db.entities.ProductEntity
+import com.example.youverifyassessment.domain.model.ProductsDomain
+
+@Dao
+interface ProductDao {
+    @Upsert
+    suspend fun insertProduct(products: List<ProductEntity>)
+
+    @Query("DELETE FROM products")
+    suspend fun clearAll(): Int
+
+    @Query("SELECT * FROM products WHERE title LIKE '%' || :searchQuery || '%'")
+    fun getMovies(searchQuery: String): PagingSource<Int, ProductsDomain>
+}
