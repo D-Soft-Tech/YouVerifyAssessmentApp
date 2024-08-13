@@ -4,6 +4,17 @@ import com.example.youverifyassessment.data.local.db.entities.ShoppingCartEntity
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Manages all operations involving Shopping Carts
+ *
+ * @author Adebayo Oloyede
+ *
+ * @since August, 2024
+ *
+ * [Github](https://www.github.com/D-Soft-Tech)
+ *
+ * [LinkedIn](https://www.linkedin.com/in/adebayo-oloyede)
+ * */
 interface ShoppingCartContract {
     /**
      * Uses the value of quantity of the [shoppingItem] to update the shopping item in the shopping cart, [ShoppingCartEntity] table.
@@ -16,12 +27,12 @@ interface ShoppingCartContract {
      * @param [shoppingItem] which is the new shopping item to be added, removed or updated as the case may be.
      * @return [Int] which is the number of rows the operation affected
      * */
-    suspend fun updateShoppingItemQuantityOrRemove(shoppingItem: ShoppingItemDomain): Int
+    suspend fun insertUpdateOrRemoveShoppingItem(shoppingItem: ShoppingItemDomain): Int
 
     /**
      * Retrieves all items in the shopping cart [ShoppingCartEntity]
      *
-     * @return List<[ShoppingItemDomain]>
+     * @return List<[ShoppingItemDomain]> wrapped in a Kotlin Coroutines Flow
      * */
     fun fetchShoppingItems(): Flow<List<ShoppingItemDomain>>
 }

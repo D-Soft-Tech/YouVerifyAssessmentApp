@@ -13,7 +13,7 @@ import javax.inject.Singleton
 class ShoppingCartUseCase @Inject constructor(
     private val shoppingCartDao: ShoppingCartDao
 ) : ShoppingCartContract {
-    override suspend fun updateShoppingItemQuantityOrRemove(shoppingItem: ShoppingItemDomain): Int =
+    override suspend fun insertUpdateOrRemoveShoppingItem(shoppingItem: ShoppingItemDomain): Int =
         if (shoppingItem.quantity.toInt() == 0) {
             shoppingCartDao.deleteShoppingItem(shoppingItem.shoppingCartId.toInt())
         } else {

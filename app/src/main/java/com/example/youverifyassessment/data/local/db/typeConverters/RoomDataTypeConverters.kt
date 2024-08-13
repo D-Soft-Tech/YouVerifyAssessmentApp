@@ -3,7 +3,9 @@ package com.example.youverifyassessment.data.local.db.typeConverters
 import androidx.room.TypeConverter
 import com.example.youverifyassessment.data.local.db.entities.ProductCategoryEntity
 import com.example.youverifyassessment.data.local.db.entities.ProductEntity
+import com.example.youverifyassessment.data.local.db.relations.ShoppingItemEntityData
 import com.example.youverifyassessment.domain.model.ProductsDomain
+import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.utils.AppConstants.PRODUCT_IMAGES_SEPARATOR
 import com.example.youverifyassessment.utils.ModelMapper.toDomain
 import com.example.youverifyassessment.utils.ModelMapper.toEntity
