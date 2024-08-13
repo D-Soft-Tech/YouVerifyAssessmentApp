@@ -12,9 +12,12 @@ interface ProductDao {
     @Upsert
     suspend fun insertProduct(products: List<ProductEntity>)
 
+    @Query("SELECT * FROM products ORDER BY id DESC LIMIT 1")
+    suspend fun getLastProduct(): List<ProductsDomain>
+
     @Query("DELETE FROM products")
     suspend fun clearAll(): Int
 
-    @Query("SELECT * FROM products WHERE title LIKE '%' || :searchQuery || '%'")
-    fun getMovies(searchQuery: String): PagingSource<Int, ProductsDomain>
+    @Query("SELECT * FROM products ORDER BY id ASC")
+    fun getProducts(): PagingSource<Int, ProductsDomain>
 }

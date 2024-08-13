@@ -17,12 +17,20 @@ object ModelMapper {
         uid, email, phoneNumber, photoUrl?.path, displayName
     )
 
-    fun ProductsResponseDtoItem.toEntity(): ProductEntity = ProductEntity(
-        id, category.toEntity(), images, price, title, description
+    fun ProductsResponseDtoItem.toEntity(offSet: Int): ProductEntity = ProductEntity(
+        id, category.toEntity(), images, price, title, description, offSet
+    )
+
+    fun ProductsResponseDtoItem.toDomain(offSet: Int): ProductsDomain = ProductsDomain(
+        id.toString(), category.toDomain(), images, price.toString(), title, description, offSet.toString()
     )
 
     fun CategoryDto.toEntity(): ProductCategoryEntity = ProductCategoryEntity(
         id, image, name
+    )
+
+    fun CategoryDto.toDomain(): ProductCategoryDomain = ProductCategoryDomain(
+        id.toString(), image, name
     )
 
     fun ProductCategoryDomain.toEntity(): ProductCategoryEntity = ProductCategoryEntity(
@@ -39,7 +47,8 @@ object ModelMapper {
             images,
             price.toString(),
             title,
-            productDescription
+            productDescription,
+            offSet.toString()
         )
 
     fun ProductsDomain.toEntity(): ProductEntity = ProductEntity(

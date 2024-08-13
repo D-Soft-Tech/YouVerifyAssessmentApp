@@ -7,22 +7,20 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.youverifyassessment.data.local.db.relations.ShoppingItemEntityData
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShoppingCartDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertShoppingItem(shoppingItem: ShoppingItemDomain)
+    suspend fun insertShoppingItem(shoppingItem: ShoppingItemDomain): Int
 
     @Query("DELETE FROM shoppingCart WHERE shoppingCartId = :shoppingItemId")
-    suspend fun deleteShoppingItem(shoppingItemId: Int): Int
-
-    @Query("SELECT ALL <productId, category, > FROM products  ")
-    suspend fun aaa(): List<ShoppingItemEntityData>
+    fun deleteShoppingItem(shoppingItemId: Int): Int
 
     @Query("DELETE FROM shoppingCart")
     suspend fun clearAll(): Int
 
     @Transaction
     @Query("SELECT * FROM products WHERE id IN (SELECT productId FROM shoppingCart)")
-    suspend fun getShoppingCart(): List<ShoppingItemEntityData>
+    fun getShoppingCart(): Flow<List<ShoppingItemEntityData>>
 }

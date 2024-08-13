@@ -10,5 +10,6 @@ data class ProductsDomain(
     val images: List<String>,
     val price: String,
     val title: String,
-    val productDescription: String
+    val productDescription: String,
+    val offSet: String
 ): Parcelable

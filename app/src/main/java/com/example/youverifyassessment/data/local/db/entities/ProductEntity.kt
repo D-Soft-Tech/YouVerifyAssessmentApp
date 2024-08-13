@@ -13,5 +13,6 @@ data class ProductEntity(
     val images: List<String>,
     val price: Int,
     val title: String,
-    val productDescription: String
+    val productDescription: String,
+    val offSet: Int = 0
 )

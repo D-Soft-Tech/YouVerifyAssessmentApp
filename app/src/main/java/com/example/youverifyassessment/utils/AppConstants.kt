@@ -15,8 +15,6 @@ object AppConstants {
     const val USER_ACCOUNT_PREF_TAG = "USER_ACCOUNT_PREF_TAG"
 
     // Database
-    const val MOVIE_DETAILS_TABLE_NAME = "movie_details"
-    const val MOVIE_TABLE_NAME = "movie"
     const val DB_NAME = "YouVerifyAssessmentDb"
     const val DB_VERSION = 1
     const val PAGE_SIZE = 20

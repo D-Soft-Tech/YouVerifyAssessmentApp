@@ -33,7 +33,7 @@ class PreferencesManager @Inject constructor(
     private fun createBooleanKey(key: String): Preferences.Key<Boolean> = booleanPreferencesKey(key)
     private fun createDoubleKey(key: String): Preferences.Key<Double> = doublePreferencesKey(key)
 
-    override suspend fun retrieveStringFromSharedPrefs(key: String, defaultValue: String): Flow<String?> {
+    override fun retrieveStringFromSharedPrefs(key: String, defaultValue: String): Flow<String?> {
         val prefKey = createStringKey(key)
         return dataStore.data.map {
             it[prefKey] ?: defaultValue
@@ -42,7 +42,7 @@ class PreferencesManager @Inject constructor(
         }
     }
 
-    override suspend fun retrieveIntFromSharedPrefs(key: String, defaultValue: Int?): Flow<Int?> {
+    override fun retrieveIntFromSharedPrefs(key: String, defaultValue: Int?): Flow<Int?> {
         val prefKey = createIntKey(key)
         return dataStore.data.
             map {
@@ -89,7 +89,7 @@ class PreferencesManager @Inject constructor(
         }
     }
 
-    override suspend fun retrieveBooleanFromSharedPrefs(key: String, defaultValue: Boolean): Flow<Boolean> {
+    override fun retrieveBooleanFromSharedPrefs(key: String, defaultValue: Boolean): Flow<Boolean> {
         val prefKey = createBooleanKey(key)
         return dataStore.data.map {
             it[prefKey] ?: defaultValue
@@ -98,7 +98,7 @@ class PreferencesManager @Inject constructor(
         }
     }
 
-    override suspend fun retrieveLongFromSharedPrefs(key: String, defaultValue: Long?): Flow<Long?> {
+    override fun retrieveLongFromSharedPrefs(key: String, defaultValue: Long?): Flow<Long?> {
         val prefKey = createLongKey(key)
         return dataStore.data.
         map {
@@ -108,7 +108,7 @@ class PreferencesManager @Inject constructor(
         }
     }
 
-    override suspend fun retrieveDoubleFromSharedPrefs(key: String, defaultValue: Double?): Flow<Double?> {
+    override fun retrieveDoubleFromSharedPrefs(key: String, defaultValue: Double?): Flow<Double?> {
         val prefKey = createDoubleKey(key)
         return dataStore.data.map {
             it[prefKey] ?: defaultValue

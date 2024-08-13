@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ProductsApiService {
-    @GET("api/v1/products?limit=0&offset=20")
+    @GET("api/v1/products")
     fun getProducts(
         @Query("offset") offSet: Int,
         @Query("limit") pageSize: Int

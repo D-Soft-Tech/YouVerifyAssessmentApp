@@ -5,6 +5,10 @@ import com.example.youverifyassessment.domain.DeviceUtilsContract
 import com.example.youverifyassessment.domain.DeviceUtilsUseCase
 import com.example.youverifyassessment.domain.encryption.DataEncryptionContract
 import com.example.youverifyassessment.domain.encryption.DataEncryptionUseCase
+import com.example.youverifyassessment.domain.repository.GetProductsContract
+import com.example.youverifyassessment.domain.repository.ShoppingCartContract
+import com.example.youverifyassessment.domain.usecases.GetProductsUseCase
+import com.example.youverifyassessment.domain.usecases.ShoppingCartUseCase
 import com.example.youverifyassessment.utils.AppConstants.ENCRYPTION_ALG_TYPE_DI_NAME
 import com.example.youverifyassessment.utils.AppConstants.ENCRYPTION_IV_DI_NAME
 import com.example.youverifyassessment.utils.AppConstants.ENCRYPTION_PADDING_DI_NAME
@@ -76,4 +80,16 @@ object AppModule {
     fun providesDeviceUtilityContract(
         @ApplicationContext context: Context
     ): DeviceUtilsContract = DeviceUtilsUseCase(context)
+
+    @Singleton
+    @Provides
+    fun providesGetProductsContract(
+        getProductsUseCase: GetProductsUseCase
+    ): GetProductsContract = getProductsUseCase
+
+    @Singleton
+    @Provides
+    fun providesShoppingCartContract(
+        shoppingCartUseCase: ShoppingCartUseCase
+    ): ShoppingCartContract = shoppingCartUseCase
 }
