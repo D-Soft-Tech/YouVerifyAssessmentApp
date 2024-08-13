@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.youverifyassessment.data.local.db.entities.ShoppingCartEntity
 import com.example.youverifyassessment.data.local.db.relations.ShoppingItemEntityData
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import kotlinx.coroutines.flow.Flow
@@ -12,10 +13,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShoppingCartDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertShoppingItem(shoppingItem: ShoppingItemDomain): Int
+    suspend fun insertShoppingItem(shoppingItem: ShoppingCartEntity): Long
 
-    @Query("DELETE FROM shoppingCart WHERE shoppingCartId = :shoppingItemId")
-    fun deleteShoppingItem(shoppingItemId: Int): Int
+    @Query("SELECT COUNT(*) FROM shoppingCart WHERE productId = :productId")
+    suspend fun getShoppingItemByProductId(productId: Int): Int
+
+    @Query("SELECT SUM(quantity) FROM shoppingCart")
+    fun getTotalItemsInShoppingCart(): Flow<Int>
+
+    @Query("DELETE FROM shoppingCart WHERE productId = :productId")
+    fun deleteShoppingItem(productId: Int): Int
 
     @Query("DELETE FROM shoppingCart")
     suspend fun clearAll(): Int

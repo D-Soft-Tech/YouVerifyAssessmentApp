@@ -16,6 +16,7 @@ import com.example.youverifyassessment.utils.AppConstants.ENCRYPTION_SECRET_KEY_
 import com.example.youverifyassessment.utils.AppConstants.IO_DISPATCHER_DI_NAME
 import com.example.youverifyassessment.utils.AppConstants.MAIN_THREAD_DISPATCHER_DI_NAME
 import com.example.youverifyassessment.utils.AppParameters
+import com.example.youverifyassessment.utils.Utils
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -92,4 +93,8 @@ object AppModule {
     fun providesShoppingCartContract(
         shoppingCartUseCase: ShoppingCartUseCase
     ): ShoppingCartContract = shoppingCartUseCase
+
+    @Singleton
+    @Provides
+    fun providesUtils(): Utils = Utils()
 }

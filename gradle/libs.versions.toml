@@ -32,6 +32,7 @@ google_auth = "21.2.0"
 firebaseAuth = "23.0.0"
 dataStoreVersion = "1.1.1"
 lottie_version = '3.5.0'
+coroutine_adapter_factory_version = "0.9.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +73,7 @@ fragment-nav = { group = "androidx.navigation", name = "navigation-fragment-ktx"
 ui-nav = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navArgsVersion" }
 datastore-dependency = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStoreVersion" }
 lottie-animation-view = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie_version" }
+coroutine-call-adapter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlin-coroutines-adapter", version.ref = "coroutine_adapter_factory_version" }
 # Firebase
 firebase-dependency = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseVersion" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }

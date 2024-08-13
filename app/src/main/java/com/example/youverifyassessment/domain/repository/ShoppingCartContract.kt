@@ -25,9 +25,15 @@ interface ShoppingCartContract {
      * Likewise, if the item doesn't exist in the table before, it adds it afresh.
      *
      * @param [shoppingItem] which is the new shopping item to be added, removed or updated as the case may be.
+     * @param [isIncrease] tells if the operation is to increase the [ShoppingCartEntity.quantity] column or to decrease it.
      * @return [Int] which is the number of rows the operation affected
      * */
-    suspend fun insertUpdateOrRemoveShoppingItem(shoppingItem: ShoppingItemDomain): Int
+    suspend fun insertUpdateOrRemoveShoppingItem(shoppingItem: ShoppingItemDomain, isIncrease: Boolean): Int
+
+    /**
+     * Retrieves the total number of items in the shopping cart
+     * */
+    fun getTotalItemsInShoppingCart(): Flow<Int>
 
     /**
      * Retrieves all items in the shopping cart [ShoppingCartEntity]

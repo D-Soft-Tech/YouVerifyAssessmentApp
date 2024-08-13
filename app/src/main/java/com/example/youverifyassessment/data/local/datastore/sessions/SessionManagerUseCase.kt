@@ -21,7 +21,7 @@ class SessionManagerUseCase @Inject constructor(
         preferencesManager.saveStringToSharedPrefs(USER_ACCOUNT_PREF_TAG, userAsString)
     }
 
-    override suspend fun getCurrentlyLoggedInUser(): Flow<UserDetailsDomain?> =
+    override fun getCurrentlyLoggedInUser(): Flow<UserDetailsDomain?> =
         preferencesManager.retrieveStringFromSharedPrefs(USER_ACCOUNT_PREF_TAG).map {
             it?.let {
                 gson.fromJson(it, UserDetailsDomain::class.java)

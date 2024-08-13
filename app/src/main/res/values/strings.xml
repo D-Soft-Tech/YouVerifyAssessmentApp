@@ -22,7 +22,8 @@
     <string name="login_failed">Logging in failed, Kindly try again.</string>
     <string name="failed_try_again">Failed, kindly try again</string>
     <string name="youverify">YouVerify</string>
-    <string name="search_products">Search products...</string>
+    <string name="naira_symbol_place_holder">₦ %1s</string>
+    <string name="search_products">Search products…</string>
     <string name="drag_up">drag up</string>
     <string name="shopping_bag_icon">shopping bag icon</string>
     <string name="size_7_60_fl_oz_225ml">Size 7.60 fl oz / 225ml</string>

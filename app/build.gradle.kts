@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.nav.ui)
     implementation(libs.logging.interceptor.dependency)
     implementation(libs.dprefs.library)
+    implementation(libs.coroutine.call.adapter)
     // Room
     implementation(libs.androidx.room.ktx)
     kapt(libs.room.annotation.processor.dependency)

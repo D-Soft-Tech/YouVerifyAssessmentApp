@@ -29,5 +29,5 @@ Java_com_example_youverifyassessment_utils_AppParameters_getIv(JNIEnv *env, jobj
 
 JNIEXPORT jstring JNICALL
 Java_com_example_youverifyassessment_utils_AppParameters_getGoogleKey(JNIEnv *env, jobject thiz) {
-    return (*env)->NewStringUTF(env, "780213070535-33dosqkjqgugvslotn87d4217ipjiu4n.apps.googleusercontent.com");
+    return (*env)->NewStringUTF(env, "AIzaSyCpZHv79ggPUvB7k5ZxnyZeARoOt75E8rM");
 }

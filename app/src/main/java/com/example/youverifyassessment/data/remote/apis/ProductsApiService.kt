@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface ProductsApiService {
     @GET("api/v1/products")
-    fun getProducts(
+    suspend fun getProducts(
         @Query("offset") offSet: Int,
         @Query("limit") pageSize: Int
     ): Response<ProductsResponseDto>

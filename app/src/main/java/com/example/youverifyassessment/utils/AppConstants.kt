@@ -13,6 +13,8 @@ object AppConstants {
     const val ENCRYPTION_PADDING_DI_NAME = "ENCRYPTION_PADDING_DI_NAME"
 
     const val USER_ACCOUNT_PREF_TAG = "USER_ACCOUNT_PREF_TAG"
+    const val ON_PRODUCT_CLICKED_DI_NAME = "ON_PRODUCT_CLICKED_DI_NAME"
+    const val ON_ADD_TO_CART_DI_NAME = "ON_ADD_TO_CART_DI_NAME"
 
     // Database
     const val DB_NAME = "YouVerifyAssessmentDb"

@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface SessionManagerContract {
     suspend fun saveUser(user: UserDetailsDomain)
-    suspend fun getCurrentlyLoggedInUser(): Flow<UserDetailsDomain?>
+    fun getCurrentlyLoggedInUser(): Flow<UserDetailsDomain?>
 }

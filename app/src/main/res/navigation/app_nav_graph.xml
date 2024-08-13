@@ -98,6 +98,9 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <argument
+            android:name="selectedProduct"
+            app:argType="com.example.youverifyassessment.domain.model.ProductsDomain" />
     </fragment>
     <fragment
         android:id="@+id/checkOutFragment"

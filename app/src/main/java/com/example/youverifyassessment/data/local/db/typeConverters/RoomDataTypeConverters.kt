@@ -3,7 +3,8 @@ package com.example.youverifyassessment.data.local.db.typeConverters
 import androidx.room.TypeConverter
 import com.example.youverifyassessment.data.local.db.entities.ProductCategoryEntity
 import com.example.youverifyassessment.data.local.db.entities.ProductEntity
-import com.example.youverifyassessment.data.local.db.relations.ShoppingItemEntityData
+import com.example.youverifyassessment.data.local.db.entities.ShoppingCartEntity
+import com.example.youverifyassessment.domain.model.ProductCategoryDomain
 import com.example.youverifyassessment.domain.model.ProductsDomain
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.utils.AppConstants.PRODUCT_IMAGES_SEPARATOR
@@ -35,10 +36,21 @@ class RoomDataTypeConverters {
 
         @JvmStatic
         @TypeConverter
+        fun fromProductDomain(productsDomain: ProductsDomain): ProductEntity =
+            productsDomain.toEntity()
+
+        @JvmStatic
+        @TypeConverter
         fun toProductDomain(productEntity: ProductEntity): ProductsDomain = productEntity.toDomain()
 
         @JvmStatic
         @TypeConverter
-        fun fromProductDomain(productsDomain: ProductsDomain): ProductEntity = productsDomain.toEntity()
+        fun fromProductCategoryDomain(productCategoryDomain: ProductCategoryDomain): String =
+            Gson().toJson(productCategoryDomain)
+
+        @JvmStatic
+        @TypeConverter
+        fun toProductCategoryDomain(productCategoryDomainAsString: String): ProductCategoryDomain =
+            Gson().fromJson(productCategoryDomainAsString, ProductCategoryDomain::class.java)
     }
 }

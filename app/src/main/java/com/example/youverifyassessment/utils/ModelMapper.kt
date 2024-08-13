@@ -22,7 +22,13 @@ object ModelMapper {
     )
 
     fun ProductsResponseDtoItem.toDomain(offSet: Int): ProductsDomain = ProductsDomain(
-        id.toString(), category.toDomain(), images, price.toString(), title, description, offSet.toString()
+        id.toString(),
+        category.toDomain(),
+        images,
+        price.toString(),
+        title,
+        description,
+        offSet.toString()
     )
 
     fun CategoryDto.toEntity(): ProductCategoryEntity = ProductCategoryEntity(
@@ -69,6 +75,8 @@ object ModelMapper {
     fun ShoppingItemDomain.createFirstShoppingItemEntity(): ShoppingCartEntity =
         ShoppingCartEntity(null, product.id.toInt(), 0)
 
-    fun ShoppingItemDomain.createIncrementedOrDecrementedShoppingCartEntity(newQuantity: Int): ShoppingCartEntity =
-        ShoppingCartEntity(shoppingCartId.toInt(), product.id.toInt(), newQuantity)
+    fun ShoppingItemDomain.createIncrementedOrDecrementedShoppingCartEntity(isIncreaseTheQyt: Boolean): ShoppingCartEntity {
+        val newQuantity = if (isIncreaseTheQyt) (quantity.toInt() + 1) else (quantity.toInt() - 1)
+        return ShoppingCartEntity(shoppingCartId.toInt(), product.id.toInt(), newQuantity)
+    }
 }
