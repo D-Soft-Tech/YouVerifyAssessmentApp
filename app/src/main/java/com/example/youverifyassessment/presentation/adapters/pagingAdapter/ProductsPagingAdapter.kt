@@ -16,7 +16,6 @@ import com.example.youverifyassessment.utils.AppConstants.ON_ADD_TO_CART_DI_NAME
 import com.example.youverifyassessment.utils.AppConstants.ON_PRODUCT_CLICKED_DI_NAME
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import javax.inject.Named
 
 typealias ProductsClickListener = (selectedProduct: ProductsDomain) -> Unit
 typealias AddToCartClickListener = (product: ProductsDomain, clickedView: View) -> Unit

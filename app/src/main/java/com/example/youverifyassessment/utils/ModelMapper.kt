@@ -1,5 +1,6 @@
 package com.example.youverifyassessment.utils
 
+import android.util.Log
 import com.example.youverifyassessment.data.local.db.entities.ProductCategoryEntity
 import com.example.youverifyassessment.data.local.db.entities.ProductEntity
 import com.example.youverifyassessment.data.local.db.entities.ShoppingCartEntity
@@ -11,6 +12,8 @@ import com.example.youverifyassessment.domain.model.ProductsDomain
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.domain.model.UserDetailsDomain
 import com.google.firebase.auth.FirebaseUser
+import com.google.gson.Gson
+import java.lang.Exception
 
 object ModelMapper {
     fun FirebaseUser.toDomain(): UserDetailsDomain = UserDetailsDomain(
@@ -18,7 +21,7 @@ object ModelMapper {
     )
 
     fun ProductsResponseDtoItem.toEntity(offSet: Int): ProductEntity = ProductEntity(
-        id, category.toEntity(), images, price, title, description, offSet
+        id, category.toEntity(), images, price, title, description, offSet, false
     )
 
     fun ProductsResponseDtoItem.toDomain(offSet: Int): ProductsDomain = ProductsDomain(
@@ -28,7 +31,8 @@ object ModelMapper {
         price.toString(),
         title,
         description,
-        offSet.toString()
+        offSet.toString(),
+        false
     )
 
     fun CategoryDto.toEntity(): ProductCategoryEntity = ProductCategoryEntity(
@@ -54,11 +58,19 @@ object ModelMapper {
             price.toString(),
             title,
             productDescription,
-            offSet.toString()
+            offSet.toString(),
+            isInCart
         )
 
     fun ProductsDomain.toEntity(): ProductEntity = ProductEntity(
-        id.toInt(), category.toEntity(), images, price.toInt(), title, productDescription
+        id.toInt(),
+        category.toEntity(),
+        images,
+        price.toInt(),
+        title,
+        productDescription,
+        offSet.toInt(),
+        isInCart
     )
 
     fun ShoppingItemEntityData.toDomain(): ShoppingItemDomain =
@@ -70,13 +82,22 @@ object ModelMapper {
         )
 
     fun ProductsDomain.createFirstShoppingItem(): ShoppingItemDomain =
-        ShoppingItemDomain("null", this, "0", "")
+        if (this.isInCart) {
+            ShoppingItemDomain("null", this, "1", price)
+        } else {
+            ShoppingItemDomain("null", this, "0", price)
+        }
 
     fun ShoppingItemDomain.createFirstShoppingItemEntity(): ShoppingCartEntity =
-        ShoppingCartEntity(null, product.id.toInt(), 0)
+        ShoppingCartEntity(null, product.id.toInt(), quantity.toInt())
 
     fun ShoppingItemDomain.createIncrementedOrDecrementedShoppingCartEntity(isIncreaseTheQyt: Boolean): ShoppingCartEntity {
         val newQuantity = if (isIncreaseTheQyt) (quantity.toInt() + 1) else (quantity.toInt() - 1)
-        return ShoppingCartEntity(shoppingCartId.toInt(), product.id.toInt(), newQuantity)
+            Log.d("DATA_ERROR_1", Gson().toJson(this))
+        return try {
+            ShoppingCartEntity(shoppingCartId?.toInt(), product.id.toInt(), newQuantity)
+        } catch (e: Exception) {
+            ShoppingCartEntity(null, product.id.toInt(), newQuantity)
+        }
     }
 }

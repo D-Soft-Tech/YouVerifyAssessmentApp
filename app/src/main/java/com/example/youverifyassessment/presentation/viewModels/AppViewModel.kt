@@ -1,5 +1,6 @@
 package com.example.youverifyassessment.presentation.viewModels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -13,7 +14,8 @@ import com.example.youverifyassessment.domain.repository.ShoppingCartContract
 import com.example.youverifyassessment.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,7 +30,6 @@ class AppViewModel @Inject constructor(
 ) : ViewModel() {
     private val _currentlyLoggedInUser: MutableStateFlow<UserDetailsDomain?> =
         MutableStateFlow(null)
-    val currentlyLoggedInUser: StateFlow<UserDetailsDomain?> get() = _currentlyLoggedInUser
     val currentlyLoggedInUserLiveData: LiveData<UserDetailsDomain?> get() = _currentlyLoggedInUser.asLiveData()
 
     val products = productsUseCase.getProducts(0).flow.cachedIn(viewModelScope)
@@ -62,11 +63,23 @@ class AppViewModel @Inject constructor(
 
     fun getTotalItemsInShoppingCart() {
         viewModelScope.launch(ioDispatcher) {
-            shoppingCartUseCase.getTotalItemsInShoppingCart().collect { total ->
-                total.let {
-                    _totalItemsInCart.value = it.toString()
+            shoppingCartUseCase.getTotalItemsInShoppingCart()
+                .catch {e ->
+                    e.localizedMessage?.let { Log.d("DATA_ERROR", e.toString()) }
+                    emit(0)
                 }
-            }
+                .collect { total ->
+                    total?.let {
+                        _totalItemsInCart.value = it.toString()
+                    }
+                }
+        }
+    }
+
+    fun clearCart() {
+        viewModelScope.launch(ioDispatcher) {
+            shoppingCartUseCase.clearShoppingCart()
+            _totalItemsInCart.value = 0.toString()
         }
     }
 

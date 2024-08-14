@@ -13,5 +13,6 @@ data class ProductEntity(
     val price: Int,
     val title: String,
     val productDescription: String,
-    val offSet: Int = 0
+    val offSet: Int = 0,
+    var isInCart: Boolean
 )

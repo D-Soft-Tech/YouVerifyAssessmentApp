@@ -24,6 +24,7 @@ import com.example.youverifyassessment.presentation.adapters.pagingAdapter.Produ
 import com.example.youverifyassessment.presentation.adapters.pagingAdapter.ProductsPagingAdapter
 import com.example.youverifyassessment.presentation.viewModels.AppViewModel
 import com.example.youverifyassessment.utils.ModelMapper.createFirstShoppingItem
+import com.example.youverifyassessment.utils.UtilsAndExtensions.showToast
 import com.example.youverifyassessment.utils.UtilsAndExtensions.toggleCartActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ class ProductsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var lottieAnimView: LottieAnimationView
     private lateinit var shoppingCartCounter: TextView
+    private lateinit var totalItemCountTv: TextView
     private val appViewModel: AppViewModel by activityViewModels()
 
     @Inject
@@ -52,10 +54,24 @@ class ProductsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        // appViewModel.getCurrentlyLoggedInUser()
         binding.apply {
             appViewModel = this@ProductsFragment.appViewModel
             lifecycleOwner = viewLifecycleOwner
         }
+        lottieAnimView.setOnClickListener {
+            appViewModel.totalItemsInCart.observe(viewLifecycleOwner) {
+                it?.let {
+                    if (it.toInt() > 0) {
+                        val action = ProductsFragmentDirections.actionProductsFragmentToCheckOutFragment()
+                        findNavController().navigate(action)
+                    } else {
+                        requireContext().showToast(getString(R.string.cart_is_empty), true)
+                    }
+                }
+            }
+        }
+
         val onProductSelected = object : ProductsClickListener {
             override fun invoke(selectedProduct: ProductsDomain) {
                 val action =
@@ -68,10 +84,10 @@ class ProductsFragment : Fragment() {
         val onAddToCart = object : AddToCartClickListener {
             override fun invoke(product: ProductsDomain, clickedView: View) {
                 val shoppingCartItem = product.createFirstShoppingItem()
-                val isIncrease = (clickedView as ImageButton).toggleCartActionButton()
+                (clickedView as ImageButton).toggleCartActionButton(product.isInCart)
                 lottieAnimView.playAnimation()
                 appViewModel.getTotalItemsInShoppingCart()
-                appViewModel.insertUpdateOrRemoveShoppingItem(shoppingCartItem, isIncrease)
+                appViewModel.insertUpdateOrRemoveShoppingItem(shoppingCartItem, !product.isInCart)
             }
         }
         productsPagingAdapter =
@@ -83,7 +99,7 @@ class ProductsFragment : Fragment() {
             adapter = productsPagingAdapter
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 appViewModel.products.collect {
                     productsPagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
@@ -92,8 +108,14 @@ class ProductsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        appViewModel.getTotalItemsInShoppingCart()
+    }
+
     private fun initViews() {
         with(binding) {
+            totalItemCountTv = this.productsCartQuantityTV
             recyclerView = productsRV
             lottieAnimView = productsShoppingCartLAV
             shoppingCartCounter = productsCartQuantityTV

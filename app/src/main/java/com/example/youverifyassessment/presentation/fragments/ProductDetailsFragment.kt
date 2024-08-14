@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
@@ -19,6 +20,7 @@ import com.example.youverifyassessment.R
 import com.example.youverifyassessment.databinding.FragmentProductDetailsBinding
 import com.example.youverifyassessment.domain.model.Review
 import com.example.youverifyassessment.presentation.adapters.pagingAdapter.ReviewsAdapter
+import com.example.youverifyassessment.presentation.viewModels.AppViewModel
 import com.example.youverifyassessment.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
@@ -35,6 +37,7 @@ class ProductDetailsFragment : Fragment() {
     private lateinit var productImagesViewPagerAdapter: FragmentStateAdapter
     private lateinit var reviewsRecyclerViewAdapter: ReviewsAdapter
     private var pageChangeCallBack: ViewPager2.OnPageChangeCallback? = null
+    private val appViewModel: AppViewModel by activityViewModels()
 
     @Inject
     lateinit var utils: Utils
@@ -51,9 +54,19 @@ class ProductDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.productDetailsMaterialToolbar.setupWithNavController(findNavController())
+        binding.apply {
+            this.appViewModel = this@ProductDetailsFragment.appViewModel
+            product = args.selectedProduct
+            lifecycleOwner = viewLifecycleOwner
+        }
 
-        bindViewsToValuesAndActions()
+        binding.productDetailsShoppingCartLAV.setOnClickListener {
+            val action = ProductDetailsFragmentDirections
+                .actionProductDetailsFragmentToCheckOutFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.productDetailsMaterialToolbar.setupWithNavController(findNavController())
 
         setUpBottomSheetDialog()
 
@@ -69,21 +82,6 @@ class ProductDetailsFragment : Fragment() {
 
         initRecyclerViewAdapter()
 
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun bindViewsToValuesAndActions() {
-
-        binding.productDetailsShoppingCartLAV.setOnClickListener {
-            val action = ProductDetailsFragmentDirections
-                .actionProductDetailsFragmentToCheckOutFragment()
-            findNavController().navigate(action)
-        }
-
-        binding.productDetailsNameTV.text = args.selectedProduct.title
-        binding.productExtraDetailsTV.text = args.selectedProduct.productDescription
-        binding.productDetailsPriceTV.text = "₦${utils.formatCurrency(args.selectedProduct.price)}"
-        binding.productDetailsRB.progress = 4 / binding.productDetailsRB.max
     }
 
     private fun setUpBottomSheetDialog() {
@@ -172,14 +170,7 @@ class ProductDetailsFragment : Fragment() {
 
         productImagesViewPagerAdapter =
             object : FragmentStateAdapter(childFragmentManager, lifecycle) {
-                private val fragments = arrayOf(
-                    ProductImageFragment(""),
-                    ProductImageFragment(""),
-                    ProductImageFragment(""),
-                    ProductImageFragment(""),
-                    ProductImageFragment(""),
-                    ProductImageFragment("")
-                )
+                private val fragments = args.selectedProduct.images.map { ProductImageFragment(it) }
                 override fun createFragment(position: Int) = fragments[position]
                 override fun getItemCount(): Int = fragments.size
             }

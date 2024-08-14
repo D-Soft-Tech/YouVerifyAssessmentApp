@@ -40,20 +40,11 @@ object UtilsAndExtensions {
         }
     }
 
-    fun ImageButton.toggleCartActionButton(): Boolean {
-        var hasNotBeenAddedAndShouldNotBeRemoved = true
-        drawable?.let {
-            if (it.constantState!! == ContextCompat.getDrawable(
-                    this.context,
-                    R.drawable.ic_added_to_cart
-                )!!.constantState
-            ) {
-                hasNotBeenAddedAndShouldNotBeRemoved = false
-                this.setImageResource(R.drawable.ic_add_to_cart)
-            } else {
-                this.setImageResource(R.drawable.ic_added_to_cart)
-            }
+    fun ImageButton.toggleCartActionButton(isInCart: Boolean) {
+        if (isInCart) {
+            this.setImageResource(R.drawable.ic_added_to_cart)
+        } else {
+            this.setImageResource(R.drawable.ic_add_to_cart)
         }
-        return hasNotBeenAddedAndShouldNotBeRemoved
     }
 }

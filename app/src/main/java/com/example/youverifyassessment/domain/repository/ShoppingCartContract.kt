@@ -33,7 +33,12 @@ interface ShoppingCartContract {
     /**
      * Retrieves the total number of items in the shopping cart
      * */
-    fun getTotalItemsInShoppingCart(): Flow<Int>
+    fun getTotalItemsInShoppingCart(): Flow<Long?>
+
+    /**
+     * Deletes all items in the shopping cart [ShoppingCartEntity]
+     * */
+    suspend fun clearShoppingCart(): Int
 
     /**
      * Retrieves all items in the shopping cart [ShoppingCartEntity]

@@ -30,4 +30,6 @@
     <string name="required">Required</string>
     <string name="invalid_email">Invalid email</string>
     <string name="password_too_short">Password too short</string>
+    <string name="cart_is_empty">Shopping Cart is empty!</string>
+    <string name="transaction_in_progress">Transaction is in progress. Please, stay on this page</string>
 </resources>

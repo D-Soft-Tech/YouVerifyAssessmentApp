@@ -5,7 +5,9 @@
     tools:context=".presentation.fragments.CheckOutFragment">
 
     <data>
-
+        <variable
+            name="appViewModel"
+            type="com.example.youverifyassessment.presentation.viewModels.AppViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -64,6 +66,7 @@
                         android:fontFamily="@font/roboto_bold"
                         android:paddingHorizontal="4dp"
                         android:paddingVertical="2dp"
+                        android:text="@{appViewModel.totalItemsInCart}"
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:textStyle="bold"

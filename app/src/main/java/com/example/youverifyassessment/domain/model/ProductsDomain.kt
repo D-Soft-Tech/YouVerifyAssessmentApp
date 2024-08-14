@@ -11,5 +11,6 @@ data class ProductsDomain(
     val price: String,
     val title: String,
     val productDescription: String,
-    val offSet: String
+    val offSet: String,
+    var isInCart: Boolean
 ): Parcelable

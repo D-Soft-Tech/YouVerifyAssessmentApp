@@ -19,7 +19,7 @@ interface ShoppingCartDao {
     suspend fun getShoppingItemByProductId(productId: Int): Int
 
     @Query("SELECT SUM(quantity) FROM shoppingCart")
-    fun getTotalItemsInShoppingCart(): Flow<Int>
+    fun getTotalNumberOfItemsInShoppingCart(): Flow<Long?>
 
     @Query("DELETE FROM shoppingCart WHERE productId = :productId")
     fun deleteShoppingItem(productId: Int): Int
@@ -27,7 +27,6 @@ interface ShoppingCartDao {
     @Query("DELETE FROM shoppingCart")
     suspend fun clearAll(): Int
 
-    @Transaction
-    @Query("SELECT * FROM products WHERE id IN (SELECT productId FROM shoppingCart)")
+    @Query("SELECT * FROM products INNER JOIN shoppingCart ON products.id = shoppingCart.productId WHERE products.id IN (SELECT productId FROM products)")
     fun getShoppingCart(): Flow<List<ShoppingItemEntityData>>
 }

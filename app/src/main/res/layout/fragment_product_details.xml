@@ -5,12 +5,18 @@
     tools:context=".presentation.fragments.ProductDetailsFragment">
 
     <data>
-
+        <variable
+            name="appViewModel"
+            type="com.example.youverifyassessment.presentation.viewModels.AppViewModel" />
+        <variable
+            name="product"
+            type="com.example.youverifyassessment.domain.model.ProductsDomain" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/grey"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -37,6 +43,7 @@
                     android:layout_height="28dp"
                     android:paddingTop="6dp"
                     android:scaleType="centerCrop"
+                    android:visibility="invisible"
                     android:src="@drawable/ic_favourite_unselected"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +76,7 @@
                     android:paddingHorizontal="4dp"
                     android:paddingVertical="2dp"
                     android:textColor="@color/white"
+                    android:text="@{appViewModel.totalItemsInCart}"
                     android:textStyle="bold"
                     android:textSize="11sp"
                     tools:text="14"
@@ -152,6 +160,7 @@
                     android:layout_marginTop="24dp"
                     android:fontFamily="@font/roboto_bold"
                     tools:text="Facial Cleanser"
+                    android:text="@{product.title}"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:textSize="16sp"
@@ -171,6 +180,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:textColor="@color/black"
                     android:textSize="18sp"
+                    android:formatAmount="@{product.price}"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/productDetailsAddToCartButton"
                     app:layout_constraintEnd_toStartOf="@+id/productDetailsAddToCartButton"
@@ -184,6 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:ellipsize="end"
+                    android:text="@{product.productDescription}"
                     android:fontFamily="@font/roboto_medium"
                     android:maxLines="2"
                     app:layout_constraintEnd_toEndOf="@+id/productDetailsRB"
@@ -198,7 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    tools:progress="75"
+                    android:progress="75"
                     android:max="100"
                     android:progressTint="@color/purple_500"
                     android:isIndicator="true"
@@ -210,6 +221,7 @@
                     android:id="@+id/productDetailsAddToCartButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:visibility="invisible"
                     android:layout_marginHorizontal="16dp"
                     android:background="@drawable/bg_favorite_icon"
                     android:padding="6dp"

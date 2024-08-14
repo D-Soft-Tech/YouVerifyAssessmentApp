@@ -78,7 +78,7 @@
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_productsFragment_to_checkOutFragment"
-            app:destination="@id/checkOutFragment"
+            app:destination="@id/cartContentsFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:launchSingleTop="true"
@@ -92,7 +92,7 @@
         tools:layout="@layout/fragment_product_details">
         <action
             android:id="@+id/action_productDetailsFragment_to_checkOutFragment"
-            app:destination="@id/checkOutFragment"
+            app:destination="@id/cartContentsFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:launchSingleTop="true"
@@ -108,13 +108,10 @@
         android:label="fragment_check_out"
         tools:layout="@layout/fragment_check_out">
         <action
-            android:id="@+id/action_checkOutFragment_to_cartContentsFragment"
-            app:destination="@id/cartContentsFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
+            android:id="@+id/action_checkOutFragment_to_successFragment"
+            app:destination="@id/successFragment"
             app:launchSingleTop="true"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:popUpTo="@id/productsFragment" />
     </fragment>
     <fragment
         android:id="@+id/cartContentsFragment"
@@ -122,10 +119,13 @@
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart">
         <action
-            android:id="@+id/action_cartContentsFragment_to_successFragment"
-            app:destination="@id/successFragment"
+            android:id="@+id/action_cartContentsFragment_to_checkOutFragment"
+            app:destination="@id/checkOutFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
             app:launchSingleTop="true"
-            app:popUpTo="@id/productsFragment" />
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/successFragment"
