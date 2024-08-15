@@ -1,7 +1,7 @@
 package com.example.youverifyassessment.domain.model
 
-enum class PaymentCardOptions {
-    MASTER_CARD,
-    VISA_CARD,
-    VERVE_CARD
+enum class PaymentCardOptions(val cardScheme: String) {
+    MASTER_CARD("MasterCard"),
+    VISA_CARD("VISA"),
+    VERVE_CARD("VerVe")
 }

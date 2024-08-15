@@ -23,6 +23,9 @@
     <string name="failed_try_again">Failed, kindly try again</string>
     <string name="youverify">YouVerify</string>
     <string name="naira_symbol_place_holder">₦ %1s</string>
+    <string name="quantity_place_holder">x %1s</string>
+    <string name="card_holder_name_and_card_scheme">%1s, %2s</string>
+    <string name="card_masked_pan_and_bank_name">%1s (%2s)</string>
     <string name="search_products">Search products…</string>
     <string name="drag_up">drag up</string>
     <string name="shopping_bag_icon">shopping bag icon</string>
@@ -32,4 +35,6 @@
     <string name="password_too_short">Password too short</string>
     <string name="cart_is_empty">Shopping Cart is empty!</string>
     <string name="transaction_in_progress">Transaction is in progress. Please, stay on this page</string>
+    <string name="_0_00">₦0.00</string>
+    <string name="pay_total_place_holder">Pay ₦%1s</string>
 </resources>

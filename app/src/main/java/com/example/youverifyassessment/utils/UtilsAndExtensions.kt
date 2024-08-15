@@ -11,6 +11,8 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.youverifyassessment.R
+import com.example.youverifyassessment.domain.DeviceUtilsContract
+import java.text.DecimalFormat
 
 
 object UtilsAndExtensions {
@@ -40,11 +42,34 @@ object UtilsAndExtensions {
         }
     }
 
+    fun formatCurrency(value: Any): String {
+        val valueToBeFormatted: Number =
+            if (value is String) value.toDouble() else value as Number
+        val df = DecimalFormat("##,###,##0.00")
+        return df.format(valueToBeFormatted)
+    }
+
     fun ImageButton.toggleCartActionButton(isInCart: Boolean) {
         if (isInCart) {
             this.setImageResource(R.drawable.ic_added_to_cart)
         } else {
             this.setImageResource(R.drawable.ic_add_to_cart)
+        }
+    }
+
+    fun String.maskCardPan(): String {
+        if (length <= 10) return this
+        val first6 = take(6)
+        val last4 = take(4)
+        val middleChars = "*".repeat(length - 10)
+        return first6 + middleChars + last4
+    }
+
+    fun Context.runIfConnected(deviceUtilsContract: DeviceUtilsContract, actionToRun: () -> Unit) {
+        if (deviceUtilsContract.isConnectionAvailable()) {
+            actionToRun.invoke()
+        } else {
+            showToast(getString(R.string.no_connection))
         }
     }
 }

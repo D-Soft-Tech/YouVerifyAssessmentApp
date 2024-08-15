@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="0"
+<animated-rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromDegrees="360"
     android:pivotX="50%"
     android:pivotY="50%"
-    android:toDegrees="360">
+    android:toDegrees="0">
 
     <shape
         android:innerRadiusRatio="3"
@@ -12,8 +12,8 @@
         android:useLevel="false">
 
         <size
-            android:width="25dip"
-            android:height="25dip" />
+            android:width="25dp"
+            android:height="25dp" />
 
         <gradient
             android:angle="0"
@@ -24,4 +24,4 @@
 
     </shape>
 
-</rotate>
+</animated-rotate>

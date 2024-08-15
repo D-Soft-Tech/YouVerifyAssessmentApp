@@ -15,7 +15,6 @@ import com.example.youverifyassessment.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -78,12 +77,15 @@ class AppViewModel @Inject constructor(
 
     fun clearCart() {
         viewModelScope.launch(ioDispatcher) {
-            shoppingCartUseCase.clearShoppingCart()
-            _totalItemsInCart.value = 0.toString()
+            _shoppingCart.value.let { shoppingItems ->
+                val productsInShoppingCart = shoppingItems.map { it.product }
+                shoppingCartUseCase.clearShoppingCart(productsInShoppingCart)
+                _totalItemsInCart.value = 0.toString()
+            }
         }
     }
 
-    fun getShoppingCart() {
+    fun getShoppingCartFromDb() {
         viewModelScope.launch(ioDispatcher) {
             shoppingCartUseCase.fetchShoppingItems().collect {
                 _shoppingCart.value = it

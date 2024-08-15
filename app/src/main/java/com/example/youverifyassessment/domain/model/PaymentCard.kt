@@ -1,5 +1,7 @@
 package com.example.youverifyassessment.domain.model
 
+import com.example.youverifyassessment.utils.UtilsAndExtensions.maskCardPan
+
 data class PaymentCard(
     val cardType: String,
     val cardTitle: String,
@@ -7,8 +9,11 @@ data class PaymentCard(
     val cardCVV: String,
     val cardExpiryMonth: Int,
     val cardExpiryYear: Int,
-    val selected: Boolean = false
-)
+    val selected: Boolean = false,
+    val cardHolderName: String = ""
+) {
+    val cardMaskedPan = cardNumber.maskCardPan()
+}
 
 fun PaymentCard.mapToPaymentCardEntity(): PaymentCardEntity {
     return PaymentCardEntity(

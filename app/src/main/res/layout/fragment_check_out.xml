@@ -5,9 +5,14 @@
     tools:context=".presentation.fragments.CheckOutFragment">
 
     <data>
+
         <variable
             name="appViewModel"
             type="com.example.youverifyassessment.presentation.viewModels.AppViewModel" />
+
+        <variable
+            name="paymentCard"
+            type="com.example.youverifyassessment.domain.model.PaymentCard" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -66,7 +71,7 @@
                         android:fontFamily="@font/roboto_bold"
                         android:paddingHorizontal="4dp"
                         android:paddingVertical="2dp"
-                        android:text="@{appViewModel.totalItemsInCart}"
+                        android:shoppingItemCountFromShoppingItemsList="@{appViewModel.shoppingCart}"
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -200,16 +205,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkOutPaymentMethodTV">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/checkoutPaymentCardIV"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginVertical="8dp"
-                    android:layout_marginStart="16dp"
+                <View
+                    android:id="@+id/vw1"
+                    android:layout_width="@dimen/dimen_50dp"
+                    android:layout_height="@dimen/dimen_50dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/white_bg_grey_outline_radius"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_master_card" />
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="16dp" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/checkoutPaymentCardIV"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:setAppropriateCardSchemeLogo="@{paymentCard}"
+                    app:layout_constraintBottom_toBottomOf="@+id/vw1"
+                    app:layout_constraintStart_toStartOf="@+id/vw1"
+                    app:layout_constraintEnd_toEndOf="@+id/vw1"
+                    app:layout_constraintTop_toTopOf="@+id/vw1"
+                    tools:srcCompat="@drawable/ic_master_card" />
 
                 <TextView
                     android:id="@+id/checkoutPaymentCardNameTV"
@@ -219,12 +235,13 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/roboto_medium"
                     android:maxLines="1"
-                    android:text="Master Card"
+                    android:setCardHolderNameWithCardScheme="@{paymentCard}"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/checkoutPaymentCardNumberTV"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/checkoutPaymentCardIV"
-                    app:layout_constraintTop_toTopOf="@+id/checkoutPaymentCardIV" />
+                    app:layout_constraintTop_toTopOf="@+id/checkoutPaymentCardIV"
+                    tools:text="Master Card" />
 
                 <TextView
                     android:id="@+id/checkoutPaymentCardNumberTV"
@@ -234,12 +251,13 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/roboto_medium"
                     android:maxLines="1"
-                    android:text="**** **** 0758 4011"
+                    android:setMaskedPanWithBankName="@{paymentCard}"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="@+id/checkoutPaymentCardIV"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/checkoutPaymentCardIV"
-                    app:layout_constraintTop_toBottomOf="@+id/checkoutPaymentCardNameTV" />
+                    app:layout_constraintTop_toBottomOf="@+id/checkoutPaymentCardNameTV"
+                    tools:text="**** **** 0758 4011" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -281,7 +299,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Pay"
+                android:setTotalPayableAmount="@{appViewModel.shoppingCart}"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 app:cornerRadius="24dp"
@@ -290,7 +308,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkoutSwitchCardTV"
                 app:strokeColor="@color/purple_500"
-                app:strokeWidth="1.5dp" />
+                app:strokeWidth="1.5dp"
+                tools:text="Pay ₦300.49" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/checkOutProgressIndicator"
@@ -361,14 +380,15 @@
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="end"
-                android:text="₦300.49"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:totalPriceFromShoppingList="@{appViewModel.shoppingCart}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toTopOf="@+id/textView8" />
+                app:layout_constraintTop_toTopOf="@+id/textView8"
+                tools:text="₦300.49" />
 
             <TextView
                 android:id="@+id/checkoutShippingFeeTV"
@@ -378,7 +398,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="end"
-                android:text="₦40.50"
+                android:text="@string/_0_00"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/textView9"
@@ -395,14 +415,15 @@
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="end"
-                android:text="₦340.99"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:totalPriceFromShoppingList="@{appViewModel.shoppingCart}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView12"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/textView12"
-                app:layout_constraintTop_toTopOf="@+id/textView12" />
+                app:layout_constraintTop_toTopOf="@+id/textView12"
+                tools:text="₦300.99" />
 
             <View
                 android:id="@+id/view3"

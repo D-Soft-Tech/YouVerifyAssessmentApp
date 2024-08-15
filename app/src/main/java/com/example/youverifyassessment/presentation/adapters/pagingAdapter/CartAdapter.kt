@@ -10,12 +10,12 @@ import com.example.youverifyassessment.databinding.ItemCartItemBinding
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.presentation.adapters.bindingAdapter.loadProductImage
 import com.example.youverifyassessment.utils.Utils
+import com.example.youverifyassessment.utils.UtilsAndExtensions.formatCurrency
 
 class CartAdapter(
     private val onItemClicked: (position: Int, itemAtPosition: ShoppingItemDomain) -> Unit,
     private val onMinusButtonClicked: (position: Int, itemAtPosition: ShoppingItemDomain) -> Unit,
     private val onPlusButtonClicked: (position: Int, itemAtPosition: ShoppingItemDomain) -> Unit,
-    private val utils: Utils
 ) : ListAdapter<ShoppingItemDomain, CartAdapter.CartItemVH>(object :
     DiffUtil.ItemCallback<ShoppingItemDomain>() {
 
@@ -102,7 +102,7 @@ class CartAdapter(
                 cartItemNameTV.text = cartItem.product.title
                 cartItemDescriptionTV.text = cartItem.product.productDescription
                 cartItemIV.loadProductImage(cartItem.product.images.getOrNull(0))
-                cartItemPrice.text = "₦${utils.formatCurrency(cartItem.totalPrice)}"
+                cartItemPrice.text = "₦${formatCurrency(cartItem.totalPrice)}"
                 cartItemQuantityTV.text = cartItem.quantity
             }
         }

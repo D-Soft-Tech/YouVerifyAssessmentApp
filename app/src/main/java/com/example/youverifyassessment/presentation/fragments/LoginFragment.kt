@@ -19,6 +19,7 @@ import com.example.youverifyassessment.presentation.viewModels.AppViewModel
 import com.example.youverifyassessment.utils.ModelMapper.toDomain
 import com.example.youverifyassessment.utils.UtilsAndExtensions.getLoadingAlertDialog
 import com.example.youverifyassessment.utils.UtilsAndExtensions.isValidEmail
+import com.example.youverifyassessment.utils.UtilsAndExtensions.runIfConnected
 import com.example.youverifyassessment.utils.UtilsAndExtensions.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -57,14 +58,10 @@ class LoginFragment : Fragment() {
                 result.data?.let {
                     try {
                         val task = GoogleSignIn.getSignedInAccountFromIntent(it)
-                        if (deviceUtilsUseCase.isConnectionAvailable()) {
-                            loaderAlertDialog?.show()
-                            loaderAlertDialog?.dismiss()
-                            val loggedInUser = task.result
-                            signInWithFireBase(loggedInUser)
-                        } else {
-                            requireContext().showToast(getString(R.string.no_connection))
-                        }
+                        loaderAlertDialog?.show()
+                        loaderAlertDialog?.dismiss()
+                        val loggedInUser = task.result
+                        signInWithFireBase(loggedInUser)
                     } catch (e: Exception) {
                         e.localizedMessage?.let { it1 -> requireContext().showToast(it1) }
                     }
@@ -89,31 +86,35 @@ class LoginFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions)
 
         signInWithGoogleButton.setOnClickListener {
-            googleSignInRequestLauncher.launch(googleSignInClient.signInIntent)
+            requireContext().runIfConnected(deviceUtilsUseCase) {
+                googleSignInRequestLauncher.launch(googleSignInClient.signInIntent)
+            }
         }
 
         loginButton.setOnClickListener {
-            when {
-                emailTiET.text.toString().trim().isEmpty() -> emailTiET.error =
-                    getString(R.string.required)
+            requireContext().runIfConnected(deviceUtilsUseCase) {
+                when {
+                    emailTiET.text.toString().trim().isEmpty() -> emailTiET.error =
+                        getString(R.string.required)
 
-                !isValidEmail(emailTiET.text.toString().trim()) -> emailTiET.error =
-                    getString(R.string.invalid_email)
+                    !isValidEmail(emailTiET.text.toString().trim()) -> emailTiET.error =
+                        getString(R.string.invalid_email)
 
-                else -> {
-                    emailTiET.error = null
-                    when {
-                        passwordTiET.text.toString().trim().isEmpty() -> passwordTiET.error =
-                            getString(R.string.required)
+                    else -> {
+                        emailTiET.error = null
+                        when {
+                            passwordTiET.text.toString().trim().isEmpty() -> passwordTiET.error =
+                                getString(R.string.required)
 
-                        passwordTiET.text.toString().trim().length < 4 -> passwordTiET.error =
-                            getString(R.string.password_too_short)
+                            passwordTiET.text.toString().trim().length < 4 -> passwordTiET.error =
+                                getString(R.string.password_too_short)
 
-                        else -> {
-                            loginWithFireBase(
-                                emailTiET.text.toString().trim(),
-                                passwordTiET.text.toString().trim()
-                            )
+                            else -> {
+                                loginWithFireBase(
+                                    emailTiET.text.toString().trim(),
+                                    passwordTiET.text.toString().trim()
+                                )
+                            }
                         }
                     }
                 }

@@ -5,29 +5,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.example.youverifyassessment.R
 import com.example.youverifyassessment.databinding.FragmentCartBinding
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.presentation.adapters.pagingAdapter.CartAdapter
 import com.example.youverifyassessment.presentation.viewModels.AppViewModel
-import com.example.youverifyassessment.utils.Utils
 import com.example.youverifyassessment.utils.UtilsAndExtensions.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CartContentsFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
     private val appViewModel: AppViewModel by activityViewModels()
     private lateinit var cartRecyclerViewAdapter: CartAdapter
-
-    @Inject
-    lateinit var utils: Utils
+    private lateinit var cartProceedToCheckOutBtn: Button
+    private lateinit var shoppingCartRv: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,8 +38,13 @@ class CartContentsFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appViewModel.getShoppingCart()
-        binding.cartProceedToCheckOutButton.setOnClickListener {
+        initViews()
+        binding.apply {
+            this.appViewModel = this@CartContentsFragment.appViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+        appViewModel.getShoppingCartFromDb()
+        cartProceedToCheckOutBtn.setOnClickListener {
             appViewModel.totalItemsInCart.observe(viewLifecycleOwner) {
                 it?.let {
                     if (it.toInt() > 1) {
@@ -56,49 +59,48 @@ class CartContentsFragment : Fragment() {
         }
 
         initCartAdapter()
-
         initCartRecyclerViewAdapter()
 
         appViewModel.shoppingCart.observe(viewLifecycleOwner) { result ->
-            val subtotal = result.fold(0.00) { acc: Double, cartItem: ShoppingItemDomain ->
-                acc + (cartItem.totalPrice.toInt())
-            }
-            val fee = 0.00
             if (result.isEmpty()) {
-                binding.cartProceedToCheckOutButton.visibility = View.INVISIBLE
+                cartProceedToCheckOutBtn.visibility = View.INVISIBLE
             } else {
-                binding.cartProceedToCheckOutButton.visibility = View.VISIBLE
+                cartProceedToCheckOutBtn.visibility = View.VISIBLE
             }
-            binding.cartQuantityTV.text = result.sumOf { it.quantity.toInt() }.toString()
-            binding.cartShippingFeeTV.text = "₦${utils.formatCurrency(fee)}"
-            binding.cartSubTotalTV.text = "₦${utils.formatCurrency(subtotal)}"
-            binding.cartTotalTV.text = "₦${utils.formatCurrency(subtotal + fee)}"
             cartRecyclerViewAdapter.submitList(result)
         }
     }
 
     private fun initCartRecyclerViewAdapter() {
-        binding.cartRV.adapter = cartRecyclerViewAdapter
+        shoppingCartRv.adapter = cartRecyclerViewAdapter
+    }
+
+    private fun initViews() {
+        with(binding) {
+            shoppingCartRv = cartRV
+            cartProceedToCheckOutBtn = cartProceedToCheckOutButton
+        }
     }
 
     private fun initCartAdapter() {
         cartRecyclerViewAdapter = CartAdapter(
-            onItemClicked = { _: Int, _: ShoppingItemDomain ->
-
+            onItemClicked = { _: Int, clickedShoppingItem: ShoppingItemDomain ->
+                val action =
+                    CartContentsFragmentDirections.actionCartContentsFragmentToProductDetailsFragment(clickedShoppingItem.product)
+                findNavController().navigate(action)
             }, onMinusButtonClicked = { _: Int, itemAtPosition: ShoppingItemDomain ->
                 appViewModel.insertUpdateOrRemoveShoppingItem(
-                    itemAtPosition.copy(quantity = (itemAtPosition.quantity.toInt() - 1).toString()),
+                    itemAtPosition.copy(quantity = (itemAtPosition.quantity.toInt()).toString()),
                     false
                 )
-                appViewModel.getShoppingCart()
+                appViewModel.getShoppingCartFromDb()
             }, onPlusButtonClicked = { _: Int, itemAtPosition: ShoppingItemDomain ->
                 appViewModel.insertUpdateOrRemoveShoppingItem(
-                    itemAtPosition.copy(quantity = (itemAtPosition.quantity.toInt() + 1).toString()),
+                    itemAtPosition.copy(quantity = (itemAtPosition.quantity.toInt()).toString()),
                     true
                 )
-                appViewModel.getShoppingCart()
-            },
-            utils
+                appViewModel.getShoppingCartFromDb()
+            }
         )
     }
 }

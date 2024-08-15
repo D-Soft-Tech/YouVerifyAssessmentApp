@@ -1,6 +1,8 @@
 package com.example.youverifyassessment.domain.repository
 
+import com.example.youverifyassessment.data.local.db.entities.ProductEntity
 import com.example.youverifyassessment.data.local.db.entities.ShoppingCartEntity
+import com.example.youverifyassessment.domain.model.ProductsDomain
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import kotlinx.coroutines.flow.Flow
 
@@ -28,7 +30,10 @@ interface ShoppingCartContract {
      * @param [isIncrease] tells if the operation is to increase the [ShoppingCartEntity.quantity] column or to decrease it.
      * @return [Int] which is the number of rows the operation affected
      * */
-    suspend fun insertUpdateOrRemoveShoppingItem(shoppingItem: ShoppingItemDomain, isIncrease: Boolean): Int
+    suspend fun insertUpdateOrRemoveShoppingItem(
+        shoppingItem: ShoppingItemDomain,
+        isIncrease: Boolean
+    ): Int
 
     /**
      * Retrieves the total number of items in the shopping cart
@@ -37,8 +42,11 @@ interface ShoppingCartContract {
 
     /**
      * Deletes all items in the shopping cart [ShoppingCartEntity]
+     *
+     * @param [shoppingItems] Products to be removed from shopping cart. The values of field [ProductEntity.isInCart] for these products would be re-set back to false.
+     * @return [Int] number of rows affected by this operation wrapped in a Coroutine flow.
      * */
-    suspend fun clearShoppingCart(): Int
+    suspend fun clearShoppingCart(shoppingItems: List<ProductsDomain>): Flow<Int>
 
     /**
      * Retrieves all items in the shopping cart [ShoppingCartEntity]

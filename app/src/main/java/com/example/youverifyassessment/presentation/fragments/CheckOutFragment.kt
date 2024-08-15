@@ -15,27 +15,25 @@ import com.example.youverifyassessment.R
 import com.example.youverifyassessment.databinding.FragmentCheckOutBinding
 import com.example.youverifyassessment.domain.model.PaymentCard
 import com.example.youverifyassessment.domain.model.PaymentCardEntity
-import com.example.youverifyassessment.domain.model.PaymentCardOptions
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.domain.model.mapToPaymentCard
-import com.example.youverifyassessment.presentation.adapters.pagingAdapter.CartAdapter
+import com.example.youverifyassessment.presentation.adapters.interactors.CheckOutItemsAdapterFactory
+import com.example.youverifyassessment.presentation.adapters.pagingAdapter.CheckOutItemsAdapter
+import com.example.youverifyassessment.presentation.adapters.pagingAdapter.ShoppingCartRVItemClickListener
 import com.example.youverifyassessment.presentation.viewModels.AppViewModel
-import com.example.youverifyassessment.utils.Utils
 import com.example.youverifyassessment.utils.UtilsAndExtensions.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckOutFragment : Fragment() {
     private lateinit var binding: FragmentCheckOutBinding
     private val appViewModel: AppViewModel by activityViewModels()
-    private lateinit var checkOutRecyclerViewAdapter: CartAdapter
+    private lateinit var checkOutRecyclerViewAdapter: CheckOutItemsAdapter
     private lateinit var paymentCard: List<PaymentCard>
-    private var totalAmount: Double = 0.00
 
     @Inject
-    lateinit var utils: Utils
+    lateinit var checkOutItemsAdapterFactory: CheckOutItemsAdapterFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,9 +66,12 @@ class CheckOutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         paymentCard = PaymentCardEntity.paymentCardEntities.map { it.mapToPaymentCard() }
-        setSelectedPaymentCard(
-            paymentCard.find { paymentCard -> paymentCard.selected }
-        )
+        // Bind Data to views
+        binding.apply {
+            this.appViewModel = this@CheckOutFragment.appViewModel
+            this.paymentCard = this@CheckOutFragment.paymentCard.find { it.selected }
+            lifecycleOwner = viewLifecycleOwner
+        }
         binding.checkoutPayButton.setOnClickListener {
             //callPayStack()
             appViewModel.clearCart()
@@ -83,41 +84,8 @@ class CheckOutFragment : Fragment() {
         initCartRecyclerViewAdapter()
 
         appViewModel.shoppingCart.observe(viewLifecycleOwner) { result ->
-            val subtotal = result.fold(0.00) { acc: Double, cartItem: ShoppingItemDomain ->
-                acc + (cartItem.totalPrice.toInt())
-            }
-            val shippingFee = 0.00
-            totalAmount = subtotal + shippingFee
-            binding.cartQuantityTV.text = result.sumOf { it.quantity.toInt() }.toString()
-            binding.checkoutShippingFeeTV.text = "₦${utils.formatCurrency(shippingFee)}"
-            binding.checkoutSubTotalTV.text = "₦${utils.formatCurrency(subtotal)}"
-            binding.checkoutTotalTV.text = "₦${utils.formatCurrency(totalAmount)}"
-            binding.checkoutPayButton.text = "Pay (₦${utils.formatCurrency(totalAmount)})"
-
             checkOutRecyclerViewAdapter.submitList(result)
         }
-    }
-
-    private fun setSelectedPaymentCard(selectedPaymentCard: PaymentCard?) {
-        when (selectedPaymentCard?.cardType) {
-            PaymentCardOptions.MASTER_CARD.name -> {
-                binding.checkoutPaymentCardIV.setImageResource(R.drawable.ic_master_card)
-            }
-
-            PaymentCardOptions.VERVE_CARD.name -> {
-                binding.checkoutPaymentCardIV.setImageResource(R.drawable.ic_verve_card)
-            }
-
-            PaymentCardOptions.VISA_CARD.name -> {
-                binding.checkoutPaymentCardIV.setImageResource(R.drawable.ic_visa_card)
-            }
-        }
-        binding.checkoutPaymentCardNameTV.text = selectedPaymentCard?.cardType?.lowercase(
-            Locale.getDefault()
-        )
-            ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-        binding.checkoutPaymentCardNumberTV.text =
-            selectedPaymentCard?.cardNumber?.chunked(4)?.joinToString(" ")
     }
 
     private fun initCartRecyclerViewAdapter() {
@@ -125,23 +93,16 @@ class CheckOutFragment : Fragment() {
     }
 
     private fun initCartAdapter() {
-        checkOutRecyclerViewAdapter = CartAdapter(
-            onItemClicked = { _: Int, _: ShoppingItemDomain ->
-
-            }, onMinusButtonClicked = { _: Int, itemAtPosition: ShoppingItemDomain ->
-                appViewModel.insertUpdateOrRemoveShoppingItem(
-                    itemAtPosition.copy(quantity = (itemAtPosition.quantity.toInt() - 1).toString()),
-                    false
-                )
-                appViewModel.getShoppingCart()
-            }, onPlusButtonClicked = { _: Int, itemAtPosition: ShoppingItemDomain ->
-                appViewModel.insertUpdateOrRemoveShoppingItem(
-                    itemAtPosition.copy(quantity = (itemAtPosition.quantity.toInt() + 1).toString()),
-                    true
-                )
-                appViewModel.getShoppingCart()
-            },
-            utils
-        )
+        checkOutRecyclerViewAdapter =
+            checkOutItemsAdapterFactory.createCheckOutItemsAdapter(object :
+                ShoppingCartRVItemClickListener {
+                override fun invoke(position: Int, itemAtPosition: ShoppingItemDomain) {
+                    val action =
+                        CheckOutFragmentDirections.actionCheckOutFragmentToProductDetailsFragment(
+                            itemAtPosition.product
+                        )
+                    findNavController().navigate(action)
+                }
+            })
     }
 }

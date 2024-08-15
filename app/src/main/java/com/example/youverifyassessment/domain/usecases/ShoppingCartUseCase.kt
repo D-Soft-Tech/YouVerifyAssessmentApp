@@ -1,17 +1,22 @@
 package com.example.youverifyassessment.domain.usecases
 
+import android.util.Log
 import androidx.room.withTransaction
 import com.example.youverifyassessment.data.local.db.dao.ProductDao
 import com.example.youverifyassessment.data.local.db.dao.ShoppingCartDao
 import com.example.youverifyassessment.data.local.db.database.YouVerifyAppDatabase
+import com.example.youverifyassessment.domain.model.ProductsDomain
 import com.example.youverifyassessment.domain.model.ShoppingItemDomain
 import com.example.youverifyassessment.domain.repository.ShoppingCartContract
 import com.example.youverifyassessment.utils.ModelMapper.createFirstShoppingItemEntity
 import com.example.youverifyassessment.utils.ModelMapper.createIncrementedOrDecrementedShoppingCartEntity
 import com.example.youverifyassessment.utils.ModelMapper.toDomain
 import com.example.youverifyassessment.utils.ModelMapper.toEntity
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -93,8 +98,14 @@ class ShoppingCartUseCase @Inject constructor(
             emit(0L)
         }
 
-    override suspend fun clearShoppingCart(): Int =
-        shoppingCartDao.clearAll()
+    override suspend fun clearShoppingCart(shoppingItems: List<ProductsDomain>): Flow<Int> {
+        return database.withTransaction {
+            productDao.insertProduct(shoppingItems.map { it.copy(isInCart = false).toEntity()})
+            shoppingCartDao.clearAll()
+        }.let {
+            flowOf(it)
+        }
+    }
 
     override fun fetchShoppingItems(): Flow<List<ShoppingItemDomain>> =
         shoppingCartDao.getShoppingCart().map { shoppingItemData ->
