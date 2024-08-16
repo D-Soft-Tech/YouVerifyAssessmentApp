@@ -21,6 +21,7 @@ object AppConstants {
     const val DB_NAME = "YouVerifyAssessmentDb"
     const val DB_VERSION = 2
     const val PAGE_SIZE = 20
+    const val PREFETCH_DISTANCE = 10
     const val PREFS_NAME = "YouVerifyPrefs"
     const val PRODUCT_TABLE_NAME = "products"
     const val PRODUCT_IMAGES_SEPARATOR = "<=====>"

@@ -54,7 +54,7 @@ class CartContentsFragment : Fragment() {
                     } else {
                         requireContext().showToast(getString(R.string.cart_is_empty), true)
                     }
-                }
+                } ?: run { requireContext().showToast(getString(R.string.cart_is_empty), true) }
             }
         }
 
@@ -86,7 +86,9 @@ class CartContentsFragment : Fragment() {
         cartRecyclerViewAdapter = CartAdapter(
             onItemClicked = { _: Int, clickedShoppingItem: ShoppingItemDomain ->
                 val action =
-                    CartContentsFragmentDirections.actionCartContentsFragmentToProductDetailsFragment(clickedShoppingItem.product)
+                    CartContentsFragmentDirections.actionCartContentsFragmentToProductDetailsFragment(
+                        clickedShoppingItem.product
+                    )
                 findNavController().navigate(action)
             }, onMinusButtonClicked = { _: Int, itemAtPosition: ShoppingItemDomain ->
                 appViewModel.insertUpdateOrRemoveShoppingItem(

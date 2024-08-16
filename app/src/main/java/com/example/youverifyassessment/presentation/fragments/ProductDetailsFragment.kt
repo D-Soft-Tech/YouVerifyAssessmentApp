@@ -1,6 +1,5 @@
 package com.example.youverifyassessment.presentation.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,12 +21,12 @@ import com.example.youverifyassessment.domain.model.Review
 import com.example.youverifyassessment.presentation.adapters.pagingAdapter.ReviewsAdapter
 import com.example.youverifyassessment.presentation.viewModels.AppViewModel
 import com.example.youverifyassessment.utils.Utils
+import com.example.youverifyassessment.utils.UtilsAndExtensions.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.abs
-import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ProductDetailsFragment : Fragment() {
@@ -53,7 +52,6 @@ class ProductDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.apply {
             this.appViewModel = this@ProductDetailsFragment.appViewModel
             product = args.selectedProduct
@@ -61,27 +59,27 @@ class ProductDetailsFragment : Fragment() {
         }
 
         binding.productDetailsShoppingCartLAV.setOnClickListener {
-            val action = ProductDetailsFragmentDirections
-                .actionProductDetailsFragmentToCheckOutFragment()
-            findNavController().navigate(action)
+            appViewModel.totalItemsInCart.observe(viewLifecycleOwner) {
+                it?.let {
+                    if (it.toInt() > 1) {
+                        val action = ProductDetailsFragmentDirections
+                            .actionProductDetailsFragmentToCheckOutFragment()
+                        findNavController().navigate(action)
+                    } else {
+                        requireContext().showToast(getString(R.string.cart_is_empty), true)
+                    }
+                } ?: run { requireContext().showToast(getString(R.string.cart_is_empty), true) }
+            }
         }
 
         binding.productDetailsMaterialToolbar.setupWithNavController(findNavController())
-
         setUpBottomSheetDialog()
-
         initProductImagesAdapter()
-
         initProductImagesViewPagerAdapter()
-
         setProductImagesViewPagerCompositePageTransformer()
-
         setUpTabLayoutMediator()
-
         initReviewsAdapter()
-
         initRecyclerViewAdapter()
-
     }
 
     private fun setUpBottomSheetDialog() {
@@ -167,7 +165,6 @@ class ProductDetailsFragment : Fragment() {
     }
 
     private fun initProductImagesAdapter() {
-
         productImagesViewPagerAdapter =
             object : FragmentStateAdapter(childFragmentManager, lifecycle) {
                 private val fragments = args.selectedProduct.images.map { ProductImageFragment(it) }

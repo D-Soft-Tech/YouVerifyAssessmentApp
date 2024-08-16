@@ -9,6 +9,7 @@ import com.example.youverifyassessment.domain.model.ProductsDomain
 import com.example.youverifyassessment.domain.pagination.ProductsRemoteMediator
 import com.example.youverifyassessment.domain.repository.GetProductsContract
 import com.example.youverifyassessment.utils.AppConstants.PAGE_SIZE
+import com.example.youverifyassessment.utils.AppConstants.PREFETCH_DISTANCE
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +22,12 @@ class GetProductsUseCase @Inject constructor(
     override fun getProducts(offSet: Int, limit: Int): Pager<Int, ProductsDomain> {
         val pagingSrcFactory = { youVerifyAppDatabase.getProductsDao().getProducts() }
         return Pager(
-            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH_DISTANCE
+            ),
             remoteMediator = ProductsRemoteMediator(youVerifyAppDatabase, productsApiService),
             pagingSourceFactory = pagingSrcFactory
         )

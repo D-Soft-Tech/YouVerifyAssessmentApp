@@ -1,6 +1,5 @@
 package com.example.youverifyassessment.domain.pagination
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -26,15 +25,19 @@ class ProductsRemoteMediator(
     ): MediatorResult {
         val offSet = when (loadType) {
             LoadType.REFRESH -> {
-                Log.d("CHECKING_LOAD_T", "LoadType.REFRESH")
-                0
+                // check if data exists
+                val lastItemInDb = database.getProductsDao().getLastProduct()
+                lastItemInDb.getOrNull(0)?.let {
+                    // If data exist, skipp remote refresh fetch and continue to append
+                    return MediatorResult.Success(endOfPaginationReached = false)
+                } ?: 0
             }
+
             LoadType.PREPEND -> {
-                Log.d("CHECKING_LOAD_T", "LoadType.PREPEND")
                 return MediatorResult.Success(endOfPaginationReached = true)
             }
+
             LoadType.APPEND -> {
-                Log.d("CHECKING_LOAD_T", "LoadType.APPEND")
                 val lastItemInDb = database.getProductsDao().getLastProduct()
                 val lastLoadedItem = state.lastItemOrNull()
                 val lastItemOrNull = lastItemInDb.getOrNull(0) ?: lastLoadedItem

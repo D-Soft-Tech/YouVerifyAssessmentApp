@@ -63,7 +63,7 @@ class AppViewModel @Inject constructor(
     fun getTotalItemsInShoppingCart() {
         viewModelScope.launch(ioDispatcher) {
             shoppingCartUseCase.getTotalItemsInShoppingCart()
-                .catch {e ->
+                .catch { e ->
                     e.localizedMessage?.let { Log.d("DATA_ERROR", e.toString()) }
                     emit(0)
                 }
