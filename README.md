@@ -28,7 +28,7 @@ YouVerify is a B2B company that builds SaaS and PaaS compliance products to help
 
 ## Preview
 
-| ![Landing Page](landing_page.png)    | ![Login Page](login_screen.png)               | ![Products Page](product_page.png) | ![Product Details Page](product_details_page.png) |
+| ![Landing Page](landing_page.png)    | ![Login Page](login_screen.png)               | ![Products Page](products_page.png) | ![Product Details Page](product_details_page.png) |
 |--------------------------------------|-----------------------------------------------|--------------------------------------------|---------------------------------------------------|
 | ![Product Reviews](reviews_page.png) | ![Shopping Cart Page](shopping_cart_page.png) | ![Checkout Page](check_out_page.png)       | ![Payment Success Page](success_page.png)         |
 
