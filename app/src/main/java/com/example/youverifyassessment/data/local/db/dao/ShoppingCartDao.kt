@@ -27,6 +27,7 @@ interface ShoppingCartDao {
     @Query("DELETE FROM shoppingCart")
     suspend fun clearAll(): Int
 
+    @Transaction
     @Query("SELECT * FROM products INNER JOIN shoppingCart ON products.id = shoppingCart.productId WHERE products.id IN (SELECT productId FROM products)")
     fun getShoppingCart(): Flow<List<ShoppingItemEntityData>>
 }

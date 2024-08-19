@@ -47,7 +47,7 @@ class CartContentsFragment : Fragment() {
         cartProceedToCheckOutBtn.setOnClickListener {
             appViewModel.totalItemsInCart.observe(viewLifecycleOwner) {
                 it?.let {
-                    if (it.toInt() > 1) {
+                    if (it.toInt() > 0) {
                         val action =
                             CartContentsFragmentDirections.actionCartContentsFragmentToCheckOutFragment()
                         findNavController().navigate(action)
